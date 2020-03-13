@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html lang="en" >
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Node.js + Socket.io搭建基于HTML5实现的Web聊天室</title>
+<script src="/socket.io/socket.io.js"></script>
+<!-- <link rel="stylesheet" href="css/font.css"> -->
+<link rel="stylesheet" href="css/reset.min.css">
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+
+<div class="wrapper">
+	<div class="container">
+        <div class="right">
+            <div class="top"><span>群聊: <span class="name">我们都是好孩子</span></span>
+            </div>
+            <div id="chatRoomDIV" class="chat" data-chat="room">
+                <div class="conversation-start">
+                    <span id="startRoomSpan">欢迎进入聊天室</span>
+                </div>
+            </div>
+            <div class="write">
+                <a href="javascript:;" class="write-link attach"></a>
+                <input id="input_text" type="text" onkeydown="onInputKeydown(event)" />
+                <a href="javascript:;" class="write-link smiley"></a>
+                <a onclick="sendTextMessage()" href="javascript:;" class="write-link send"></a>
+            </div>
+        </div>
+        <div class="left">
+            <div class="top">
+                <input type="text" placeholder="Search" />
+                <a href="javascript:;" class="search"></a>
+            </div>
+            <ul class="people">
+                <li class="person" data-chat="robot">
+                    <img src="img/avata/8.png" alt="" />
+                    <span class="name">chat room robot</span>
+                    <span class="time">2:09 PM</span>
+                    <span class="preview">I'm a robot...</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script src="js/utils.js"></script>
+<script  src="js/client.js"></script>
+<script src="js/define.js"></script>
+</body>
+</html>
