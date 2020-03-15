@@ -8,8 +8,9 @@ var me = {
 //上次消息时间
 var lastMsgTime = 0;
 window.onload = function (){
+  this.initEmoji();
   this.me.uuid = uuid();
-  EnterRoom();
+  this.EnterRoom();
 }
 
 var socket = null;
@@ -102,11 +103,14 @@ function addChatMessage(msg){
   div2.setAttribute('style', isMyself ? 'float: right;' : 'float: left;');
   var img = document.createElement('img');
   img.src = msg.person.avata;
+  img.setAttribute('class', 'avataImg');
   div2.appendChild(img);
   div1.appendChild(div2);
+  //表情处理
+  html = emojiToHtml(msg.data.value);
   var div3 = document.createElement('div');
   div3.setAttribute('class', isMyself ? 'bubble me' : 'bubble you');
-  div3.innerText = msg.data.value;
+  div3.innerHTML = html;
   div1.appendChild(div3);
   var div = document.getElementById('chatRoomDIV');
   div.appendChild(div1);
@@ -143,3 +147,37 @@ function onInputKeydown(event){
     sendTextMessage();
 }
 }
+
+function initEmoji(){
+  var div = document.querySelector('.emojiDIV');
+  for(var i=0; i<EnojiList.length; ++i){
+    var img = document.createElement('img');
+    img.title = EnojiList[i].text;
+    img.src = ImgPath + EnojiList[i].index + ".gif";
+    var code = "[" + EnojiList[i].text + "]";
+    img.setAttribute('code', code);
+    img.onclick = onInputEmoji;
+    div.appendChild(img);
+  }
+}
+
+function onInputEmoji(event){
+  var code = event.target.getAttribute('code');
+  var input = document.getElementById('input_text');
+  var text = input.value + code;
+  input.value = text;
+  document.getElementById('emojiDIVid').style.display = "none";
+
+}
+
+function onClickEmoji(){
+  var div = document.getElementById('emojiDIVid');
+  var display = div.style.display;
+  if(display === "none"){
+    div.style.display = "";
+  }
+  else{
+    div.style.display = "none";
+  }
+}
+

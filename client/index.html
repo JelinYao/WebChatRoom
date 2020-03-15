@@ -21,11 +21,15 @@
                 <div class="conversation-start">
                     <span id="startRoomSpan">欢迎进入聊天室</span>
                 </div>
+                <div class="person">
+                </div>
+            </div>
+            <div class="emojiDIV" id="emojiDIVid" style="display: none;">
             </div>
             <div class="write">
                 <a href="javascript:;" class="write-link attach"></a>
                 <input id="input_text" type="text" onkeydown="onInputKeydown(event)" />
-                <a href="javascript:;" class="write-link smiley"></a>
+                <a href="javascript:onClickEmoji();" class="write-link smiley"></a>
                 <a onclick="sendTextMessage()" href="javascript:;" class="write-link send"></a>
             </div>
         </div>

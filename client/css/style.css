@@ -340,11 +340,11 @@ body {
 .container .right .chat .person {
   margin: 6px 0px 6px 0px;
 }
-.container .right .chat .person img {
+/* .container .right .chat .person img {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-}
+} */
 .container .right .bubble.system {
   float: center;
   color: #333333;
@@ -392,6 +392,19 @@ body {
 }
 .container .right .conversation-start span:after {
   right: 0;
+}
+
+.emojiDIV{
+  margin-top: -80px;
+  border: 1px solid var(--light);
+  background-color: aliceblue;
+  position: absolute;
+}
+
+.avataImg{
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
 }
 
 @keyframes slideFromLeft {

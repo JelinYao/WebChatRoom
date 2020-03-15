@@ -21,6 +21,14 @@ socket.io中文学习文档：https://zhuanlan.zhihu.com/p/29148869
 
 （3）发消息，测试多人聊天功能。
 
+## 更新记录
+
+1、2020年3月15日21:49:14
+（1）增加Python工具代码，下载表情文件并保存到本地；
+（2）实现QQ表情输入及群发功能。
+
 ## 聊天室运行图
 
 ![](https://raw.githubusercontent.com/JelinYao/WebChatRoom/master/img/screen.png)
+
+![](https://raw.githubusercontent.com/JelinYao/WebChatRoom/master/img/emoji.png)
