@@ -13,9 +13,15 @@ class listNode{
 }
 
 class list{
-  constructor(){
+  constructor(_compare){
     this.head = null;
     this.length = 0;
+    if(_compare === null || _compare === undefined){
+      this.compare = this.defaultCmp;
+    }
+    else{
+      this.compare = _compare;
+    }
   }
 
   add(value){
@@ -36,17 +42,17 @@ class list{
     if(this.head == null){
       throw "list is empty";
     }
-    if(this.head.value === value){
+    if(this.compare(this.head.value, value)){
       this.head = null;
-      this.head.length = 0;
+      this.length = 0;
       return;
     }
     var temp = this.head;
     while(temp.next != null){
-      if(temp.next.value === value){
+      if(this.compare(temp.next.value, value)){
         //找到了
         temp.next = temp.next.next;
-        this.head.length--;
+        this.length--;
         break;
       }
       temp = temp.next;
@@ -54,18 +60,37 @@ class list{
   }
 
   find(value){
-    if(this.head == null){
-      throw "list is empty";
+    if(this.head === null){
+      return false;
     }
     var temp = this.head;
     while(temp != null){
-      if(temp.value === value){
+      if(this.compare(temp.value, value)){
         //找到了
-        return temp;
+        return true;
+      }
+      temp = temp.next;
+    }
+    return false;
+  }
+
+  findByKey(cmp, key){
+    if(this.head === null){
+      return null;
+    }
+    var temp = this.head;
+    while(temp != null){
+      if(cmp(temp.value, key)){
+        //找到了
+        return temp.value;
       }
       temp = temp.next;
     }
     return null;
+  }
+
+  defaultCmp(v1, v2){
+    return v1 === v2;
   }
 
   size(){

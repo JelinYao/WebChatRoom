@@ -22,7 +22,7 @@ function EnterRoom(){
         return;
     }
     //这里使用的是我的内网地址，方便在虚拟机、手机上也可以测试
-    socket = io('http://localhost');
+    socket = io('http://192.168.0.116');
     //连接上服务端
     socket.on('connect', ()=>{
         //var osInfo = getOsInfo();
@@ -58,7 +58,6 @@ function addMessage(msg){
         me.id = msg.person.id;
         me.name = msg.person.name;
         me.avata = msg.person.avata;
-        //text = '我进入聊天室';
         return;
       }
       text = msg.person.name + '进入聊天室';
@@ -166,8 +165,7 @@ function onInputEmoji(event){
   var input = document.getElementById('input_text');
   var text = input.value + code;
   input.value = text;
-  document.getElementById('emojiDIVid').style.display = "none";
-
+  hideEmojiDiv();
 }
 
 function onClickEmoji(){
@@ -181,3 +179,8 @@ function onClickEmoji(){
   }
 }
 
+function hideEmojiDiv(){
+  var div = document.getElementById('emojiDIVid');
+  if(div !== null)
+    div.style.display = "none";
+}

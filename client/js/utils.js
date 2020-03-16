@@ -27,6 +27,7 @@ function stampToTime(timestamp){
 } 
 
 /*
+https://www.runoob.com/jsref/jsref-substring.html
 JavaScript substring() 方法
 String 对象参考手册 JavaScript String 对象
 定义和用法

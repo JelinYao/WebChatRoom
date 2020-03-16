@@ -68,20 +68,16 @@ io.on('connection', socket=>{
     //客户端下线
     socket.on('disconnect', data=>{
         //广播到当前域空间下所有连接的socket
-        var person = null;
-        for(var p in clientList){
-            if(socket.id === p.socketId){
-                person = p;
-            }
-        }
-        if(person === null){
+        var user = clientList.findByKey(findUserBySocketId, socket.id);
+        if(user === null){
             console.log("客户端下线，没有找到对应的节点");
             return;
         }
+        clientList.remove(user);
         //客户端上线，通知所有其他客户端
         var msg = {};
         msg.type = BoardcastType.BtExitRoom;
-        msg.person = person;
+        msg.person = user;
         msg.time = new Date().getTime();
         io.emit('chat', msg);
     });
@@ -106,4 +102,8 @@ function getUserAvata(){
 var currentUserId = 10000;
 function getUserID(){
     return currentUserId++; 
+}
+
+function findUserBySocketId(user, socketId){
+    return user.socketId === socketId;
 }
