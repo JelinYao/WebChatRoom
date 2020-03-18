@@ -3,7 +3,8 @@ var me = {
   id : 0,
   name : '',
   avata : '',
-  uuid :''
+  uuid : '',
+  socketId : ''
 }
 //上次消息时间
 var lastMsgTime = 0;
@@ -22,7 +23,7 @@ function EnterRoom(){
         return;
     }
     //这里使用的是我的内网地址，方便在虚拟机、手机上也可以测试
-    socket = io('http://192.168.0.116');
+    socket = io('http://localhost');
     //连接上服务端
     socket.on('connect', ()=>{
         //var osInfo = getOsInfo();
@@ -53,22 +54,36 @@ function EnterRoom(){
 function addMessage(msg){
   switch(msg.type){
     case BoardcastType.BtEnterRoom:
-      if(msg.person.uuid === me.uuid){
+      //当前用户加入列表
+      addUserToList(msg.user);
+      if(msg.user.uuid === me.uuid){
         //用户信息更新
-        me.id = msg.person.id;
-        me.name = msg.person.name;
-        me.avata = msg.person.avata;
+        me.id = msg.user.id;
+        me.name = msg.user.name;
+        me.avata = msg.user.avata;
+        me.socketId = msg.user.socketId;
         return;
       }
-      text = msg.person.name + '进入聊天室';
+      text = msg.user.name + '进入聊天室';
       addSystemMessage(text)
       break;
     case BoardcastType.BtExitRoom:
-      text = msg.person.name + '离开聊天室';
+      text = msg.user.name + '离开聊天室';
       addSystemMessage(text)
+      delUserFromList(msg.user);
       break;
     case BoardcastType.BtMessage:
       addChatMessage(msg);
+      break;
+    case BoardcastType.BtUserList:
+      //先清空列表
+      clearList();
+      addUserToList(me);
+      //加入列表
+      var userList = msg.user;
+      for(var i=0; i<userList.length; ++i){
+        addUserToList(userList[i]);
+      }
       break;
   }
 }
@@ -94,14 +109,14 @@ function addChatMessage(msg){
   }
   lastMsgTime = msg.time;
   //再把聊天记录加入列表
-  var isMyself = (msg.person.id === me.id);
+  var isMyself = (msg.user.id === me.id);
   var div1 = document.createElement('div');
   div1.setAttribute('class', 'person');
   div1.setAttribute('data-chat', '');
   var div2 = document.createElement('div');
   div2.setAttribute('style', isMyself ? 'float: right;' : 'float: left;');
   var img = document.createElement('img');
-  img.src = msg.person.avata;
+  img.src = msg.user.avata;
   img.setAttribute('class', 'avataImg');
   div2.appendChild(img);
   div1.appendChild(div2);
@@ -132,7 +147,7 @@ function sendTextMessage(){
   input.value = '';
   var msg = {data:{}};
   msg.type = BoardcastType.BtMessage;
-  msg.person = me;
+  msg.user = me;
   msg.time = new Date().getTime();
   msg.data.type = MessageType.MtText;
   msg.data.value = text;
@@ -184,3 +199,47 @@ function hideEmojiDiv(){
   if(div !== null)
     div.style.display = "none";
 }
+
+//添加到右侧群成员列表
+function addUserToList(user){
+  var li = document.createElement('li');
+  li.setAttribute('class', 'person');
+  li.setAttribute('id', user.socketId);
+  var img = document.createElement('img');
+  img.src = user.avata;
+  li.appendChild(img);
+  var spanName = document.createElement('span');
+  spanName.setAttribute('class', 'name');
+  spanName.innerText = user.name;
+  li.appendChild(spanName);
+  var spanTime = document.createElement('span');
+  spanTime.setAttribute('class', 'time');
+  var now = new Date();
+  var time = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
+  spanTime.innerText = time;
+  li.appendChild(spanTime);
+  var spanSay = document.createElement('span');
+  spanSay.setAttribute('class', 'preview');
+  li.appendChild(spanSay);
+  var ul = document.getElementById('userListUL');
+  ul.appendChild(li);
+}
+
+//从右侧群成员列表移除
+function delUserFromList(user){
+  var li = document.getElementById(user.socketId);
+  var ul = document.getElementById('userListUL');
+  ul.removeChild(li);
+}
+
+function clearList(){
+  var ul = document.getElementById('userListUL');
+  ul.innerHTML = '';
+}
+
+/* <li class="person" data-chat="robot">
+                    <img src="img/avata/8.png" alt="" />
+                    <span class="name">chat room robot</span>
+                    <span class="time">2:09 PM</span>
+                    <span class="preview">I'm a robot...</span>
+                </li> */

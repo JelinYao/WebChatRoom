@@ -15,6 +15,12 @@
 
 （2）修复下线通知无法接受的bug。
 
+3、2020年3月18日22:28:40
+
+（1）增加右侧群聊用户列表展示；
+
+（2）实时更新群聊用户信息。
+
 ## 架构
 （1）服务端：Node.js + socket.io实现消息传输
 
@@ -38,8 +44,11 @@
 
 ## 截图
 
+![](https://raw.githubusercontent.com/JelinYao/WebChatRoom/master/img/chat1.png)
+
 ![](https://raw.githubusercontent.com/JelinYao/WebChatRoom/master/img/screen.png)
 
 ![](https://raw.githubusercontent.com/JelinYao/WebChatRoom/master/img/emoji.png)
 
 ![](https://raw.githubusercontent.com/JelinYao/WebChatRoom/master/img/chat.png)
+

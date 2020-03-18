@@ -100,6 +100,19 @@ class list{
   isEmpty(){
     return this.length === 0;
   }
+
+  getArray(){
+    var array = [];
+    if(this.head === null){
+      return array;
+    }
+    var temp = this.head;
+    while(temp != null){
+      array.push(temp.value);
+      temp = temp.next;
+    }
+    return array;
+  }
 }
 
 module.exports = {

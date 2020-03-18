@@ -9,14 +9,15 @@
 var BoardcastType = {
     BtEnterRoom : 0,
     BtExitRoom : 1,
-    BtMessage : 2
+    BtMessage : 2,
+    BtUserList : 3,
 }
 
 //定义聊天消息类型
 var MessageType = {
     MtText : 0,
     MtImage : 1,
-    MtEmoji : 2
+    MtEmoji : 2,
 }
 
 var express = require('express');
@@ -43,19 +44,27 @@ app.get('/', (req, res)=>{
 io.on('connection', socket=>{
     //客户端注册
     socket.on('register', data=>{
-        var person = {};
-        person.id = getUserID();
-        person.name = person.id;
-        person.avata = getUserAvata();
-        person.socketId = socket.id;
-        person.uuid = data.uuid;
-        clientList.add(person);
-        //客户端上线，通知所有其他客户端
         var msg = {};
+        var user = {};
+        user.id = getUserID();
+        user.name = user.id;
+        user.avata = getUserAvata();
+        user.socketId = socket.id;
+        user.uuid = data.uuid;
+        var userList = clientList.getArray();
+        clientList.add(user);
+        //客户端上线，通知所有其他客户端
         msg.type = BoardcastType.BtEnterRoom;
-        msg.person = person;
+        msg.user = user;
         msg.time = new Date().getTime();
         io.emit('chat', msg);
+        //向当前客户端发送在线列表
+        if(userList.length > 0 ){
+            msg.type = BoardcastType.BtUserList;
+            msg.user = userList;
+            msg.time = new Date().getTime();
+            socket.emit('chat', msg);
+        }
     });
 
     //客户端发送聊天消息，广播到其他客户端
@@ -77,7 +86,7 @@ io.on('connection', socket=>{
         //客户端上线，通知所有其他客户端
         var msg = {};
         msg.type = BoardcastType.BtExitRoom;
-        msg.person = user;
+        msg.user = user;
         msg.time = new Date().getTime();
         io.emit('chat', msg);
     });
@@ -92,7 +101,7 @@ function broadcastMsg(socket, data){
     socket.broadcast.emit('chat', data);
 }
 
-const avata_count = 21;
+const avata_count = 40;
 
 function getUserAvata(){
     var index = (Math.round(Math.random()*1000))%avata_count + 1;

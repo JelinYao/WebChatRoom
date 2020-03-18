@@ -97,10 +97,13 @@ body {
   border-radius: 50%;
 }
 .container .left .people {
-  margin-left: -1px;
+  position: relative;
+  overflow: auto;
+  margin-left: 1px;
   border-right: 1px solid var(--light);
   border-left: 1px solid var(--light);
-  width: calc(100% + 2px);
+  /* width: calc(100% + 2px); */
+  height: calc(100% - 100px);
 }
 .container .left .people .person {
   position: relative;
