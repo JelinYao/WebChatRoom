@@ -23,7 +23,7 @@ function EnterRoom(){
         return;
     }
     //这里使用的是我的内网地址，方便在虚拟机、手机上也可以测试
-    socket = io('http://localhost');
+    socket = io(SERVER);
     //连接上服务端
     socket.on('connect', ()=>{
         //var osInfo = getOsInfo();
@@ -72,8 +72,15 @@ function addMessage(msg){
       addSystemMessage(text)
       delUserFromList(msg.user);
       break;
-    case BoardcastType.BtMessage:
+    case BoardcastType.BtMessage:{
+      //先判断要不要添加时间
+      if(msg.time - lastMsgTime > 60000){
+        var date = stampToTime(msg.time);
+        addSystemMessage(date);
+      }
+      lastMsgTime = msg.time;
       addChatMessage(msg);
+    }
       break;
     case BoardcastType.BtUserList:
       //先清空列表
@@ -85,6 +92,10 @@ function addMessage(msg){
         addUserToList(userList[i]);
       }
       break;
+      case BoardcastType.BtUserFull:
+        socket.disconnect(true);
+        alert('聊天室人数已满，无法加入！');
+        break
   }
 }
 
@@ -102,13 +113,6 @@ function addSystemMessage(msg){
 
 //添加聊天消息
 function addChatMessage(msg){
-  //先判断要不要添加时间
-  if(msg.time - lastMsgTime > 60000){
-    var date = stampToTime(msg.time);
-    addSystemMessage(date);
-  }
-  lastMsgTime = msg.time;
-  //再把聊天记录加入列表
   var isMyself = (msg.user.id === me.id);
   var div1 = document.createElement('div');
   div1.setAttribute('class', 'person');
@@ -120,8 +124,15 @@ function addChatMessage(msg){
   img.setAttribute('class', 'avataImg');
   div2.appendChild(img);
   div1.appendChild(div2);
-  //表情处理
-  html = emojiToHtml(msg.data.value);
+  var html = '';
+  switch(msg.data.type){
+    case MessageType.MtText:
+      html = emojiToHtml(msg.data.value);
+      break;
+    case MessageType.MtImage:
+      html = "<img src=\"" + msg.data.value + "\" style=\"width:140px;height:180px;\">";
+      break;
+  }
   var div3 = document.createElement('div');
   div3.setAttribute('class', isMyself ? 'bubble me' : 'bubble you');
   div3.innerHTML = html;
@@ -237,9 +248,76 @@ function clearList(){
   ul.innerHTML = '';
 }
 
-/* <li class="person" data-chat="robot">
-                    <img src="img/avata/8.png" alt="" />
-                    <span class="name">chat room robot</span>
-                    <span class="time">2:09 PM</span>
-                    <span class="preview">I'm a robot...</span>
-                </li> */
+function onClickImg(){
+  try{
+    var input = document.getElementById('input_file');
+    if(input === undefined || input === null){
+      input = document.createElement('input')
+      input.setAttribute('id','input_file');
+      input.setAttribute('type','file');
+      input.setAttribute('name','file');
+      input.setAttribute("style",'visibility:hidden;');
+      input.addEventListener('change', ()=>{
+        console.log(input.value);
+        if(input.files.length === 0){
+          //没有选择图片
+          return;
+        }
+        var size = input.files[0].size;
+        if(size>MaxImgSize){
+          alert("图片大小超过" + MaxImgSize + "无法发送");
+          return;
+        }
+        //计算图片md5
+        var reader = new FileReader();
+        reader.onload = function(e){
+          var data = e.target.result;
+          var imgMD5 = md5(data);
+          console.log('img md5: ' + imgMD5);
+          // var form = new FormData(), url = SERVER + '/queryImg';
+          // form.append('md5', imgMD5);
+          // requestUrl(url, form, function(){
+          // });
+          //查询图片是否存在
+          var form = new FormData(), url = SERVER + '/uploadChatImg', file = input.files[0];
+          form.append('file', file);
+          form.append('md5', imgMD5);
+          var xhr = new XMLHttpRequest();
+          xhr.open("post", url, true);
+          xhr.addEventListener('readystatechange', function(){
+            var result = xhr;
+            if (result.status != 200) { //error
+                console.log('上传失败', result.status, result.statusText, result.response);
+            } 
+            else if (result.readyState == 4) { //finished
+                console.log('上传成功', result);
+                var response = JSON.parse(result.responseText);
+                if(response.code != 200){
+                  console.log(response.msg);
+                  return;
+                }
+                sendImgMessage(response.url);
+            }
+          });
+          xhr.send(form);
+        }
+        reader.readAsBinaryString(input.files[0]);
+      });
+      document.body.appendChild(input);
+    }
+    input.click();
+   }catch(e){ 
+    alert(e.message);
+   }
+}
+
+function sendImgMessage(url){
+  var msg = {data:{}};
+  msg.type = BoardcastType.BtMessage;
+  msg.user = me;
+  msg.time = new Date().getTime();
+  msg.data.type = MessageType.MtImage;
+  msg.data.value = url;
+  socket.emit('chat', msg);
+  addChatMessage(msg);
+}

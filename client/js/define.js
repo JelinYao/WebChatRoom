@@ -1,22 +1,28 @@
+//服务器域名地址
+const SERVER = "http://localhost";
 
 //定义消息类型
-var BoardcastType = {
+const BoardcastType = {
     BtEnterRoom : 0,
     BtExitRoom : 1,
     BtMessage : 2,
     BtUserList : 3,
+    BtUserFull : 4,
 }
 
 //定义聊天消息类型
-var MessageType = {
+const MessageType = {
     MtText : 0,
     MtImage : 1,
     MtEmoji : 2,
 }
 
+//定义聊天图片最大大小
+const MaxImgSize = 2*1024*1024;//2M
+
 //定义聊天表情
-var ImgPath = "img/emoji/";
-var EnojiList = [
+const ImgPath = "img/emoji/";
+const EnojiList = [
     {"index":1, "text":"微笑", },
     {"index":2, "text":"瘪嘴", },
     {"index":3, "text":"色", },

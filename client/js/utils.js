@@ -91,3 +91,15 @@ function emojiToHtml(text){
     }
     return html;
   }
+
+function getImgInfo(url){
+  var img = new Image();
+  img.src = url;
+  if(img.complete){
+    // 如果图片被缓存，则直接返回缓存数据
+  }else{
+    img.onload = function(){
+      
+    }
+  }
+}

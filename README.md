@@ -1,5 +1,5 @@
 # WebChatRoom
-使用Node.js + socket.io搭建基于HTML5的在线聊天室
+使用Node.js + socket.io搭建基于HTML5的在线聊天室，支持文字、表情、图片消息群发。
 
 ## 更新记录
 
@@ -20,6 +20,12 @@
 （1）增加右侧群聊用户列表展示；
 
 （2）实时更新群聊用户信息。
+
+4、2020年3月22日21:48:06
+
+（1）服务端node.js增加上传图片接口；
+
+（2）客户端增加图片消息协议，支持发送图片消息。
 
 ## 架构
 （1）服务端：Node.js + socket.io实现消息传输
@@ -44,11 +50,19 @@
 
 ## 截图
 
-![](https://raw.githubusercontent.com/JelinYao/WebChatRoom/master/img/chat1.png)
+1、发送图片
+
+![](https://raw.githubusercontent.com/JelinYao/WebChatRoom/master/img/chat3.png)
+
+2、发送表情
+
+![](https://raw.githubusercontent.com/JelinYao/WebChatRoom/master/img/chat2.png)
+
+3、群聊
 
 ![](https://raw.githubusercontent.com/JelinYao/WebChatRoom/master/img/screen.png)
 
 ![](https://raw.githubusercontent.com/JelinYao/WebChatRoom/master/img/emoji.png)
 
-![](https://raw.githubusercontent.com/JelinYao/WebChatRoom/master/img/chat.png)
+![](https://raw.githubusercontent.com/JelinYao/WebChatRoom/master/img/chat1.png)
 

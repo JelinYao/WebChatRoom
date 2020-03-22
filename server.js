@@ -11,6 +11,7 @@ var BoardcastType = {
     BtExitRoom : 1,
     BtMessage : 2,
     BtUserList : 3,
+    BtUserFull : 4,
 }
 
 //定义聊天消息类型
@@ -20,8 +21,13 @@ var MessageType = {
     MtEmoji : 2,
 }
 
+//定义聊天室最大用户连接数
+var maxClientCount = 5;
+
+var fs = require('fs');
 var express = require('express');
 var app = express();
+var multiparty = require('multiparty');
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 let path = require('path');
@@ -40,10 +46,93 @@ app.get('/', (req, res)=>{
     res.sendFile(__dirname + '/client/index.html');
 })
 
+//上传文件
+app.post('/uploadChatImg', (request, response)=>{
+    try{
+        //生成multiparty对象，并配置上传目标路径 
+        var form = new multiparty.Form();
+        form.encoding = 'utf-8';
+        //设置文件存储路劲
+        form.uploadDir = '.\\client\\img\\chat\\';
+        fs.stat(form.uploadDir, function(error, stats){
+            if(error){
+                fs.mkdirSync(form.uploadDir);
+            }
+        });
+        //设置文件大小限制
+        form.maxFilesSize = 3*1024*1024;
+        form.parse(request, (error, fields, files)=>{
+            if(error){
+                console.log(error);
+                response.writeHead(200, {'content-type': 'text/plain;charset=utf-8'});
+                response.write('upload file: \n\n' + error);
+                response.end();
+                return;
+            }
+            var inputFile = files.file[0];
+            var pos = inputFile.originalFilename.indexOf('.');
+            var imgExt = '';
+            if(pos !== -1){
+                imgExt = inputFile.originalFilename.substring(pos);
+            }
+            var uploadPath = inputFile.path;
+            var destPath = ".\\client\\img\\chat\\" + fields.md5 + imgExt;
+            //重命名为真实文件名
+            fs.rename(uploadPath, destPath, function(error){
+                var result = {};
+                 if(error){
+                    console.log("rename error: "+ error);
+                    result.code = -1;
+                    result.msg = error;
+                }else{
+                    result.code = 200;
+                    result.msg = 'OK';
+                    result.url = 'img/chat/' + fields.md5 + imgExt;
+                }
+                response.writeHead(200, {'content-type': 'text/plain'});
+                var json = JSON.stringify(result);
+                response.write(json);
+                response.end();
+            });
+        });
+    }
+    catch(e){
+        console.error(e);
+    }
+
+})
+
+app.post('/queryImg', (request, response)=>{
+    var md5 = request.md5;
+    var file = '.\\img\\chat\\' + md5;
+    var reader = new FileReader();
+    var result = {};
+    reader.onerror = function(e){
+        //文件不存在
+        result.code = 404;
+        reader.msg = e;
+    }
+    reader.onload = function(e){
+        //文件存在
+        result.code = 200;
+        reader.msg = 'Image exists';
+    }
+    response.writeHead(200, {'content-type': 'text/plain;charset=utf-8'});
+    response.write(JSON.stringify(result));
+    response.end();
+})
+
 //SocketIO.Socket
 io.on('connection', socket=>{
     //客户端注册
     socket.on('register', data=>{
+        if(clientList.size()>=maxClientCount){
+            var msg = {type:BoardcastType.BtUserFull};
+            socket.emit('chat', msg);
+            //关闭连接
+            socket.disconnect(true);
+            return;
+        }
         var msg = {};
         var user = {};
         user.id = getUserID();
