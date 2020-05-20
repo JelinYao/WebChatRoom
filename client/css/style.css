@@ -360,7 +360,7 @@ body {
 }
 .container .right .bubble.me {
   margin-right: 6px;
-  float: right;
+  float: left;
   width: 86%;
   line-height: 20px;
   word-wrap: break-word;
@@ -412,6 +412,11 @@ body {
   width: 48px;
   height: 48px;
   border-radius: 50%;
+}
+
+.chatUrl{
+  color: blue;
+  font-size: 12px;
 }
 
 @keyframes slideFromLeft {

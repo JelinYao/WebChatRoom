@@ -27,6 +27,10 @@
 
 （2）客户端增加图片消息协议，支持发送图片消息。
 
+5、2020年5月20日23:20:08
+（1）支持聊天文字中url链接自动识别
+（2）修复聊天框文字显示错乱的bug
+
 ## 架构
 （1）服务端：Node.js + socket.io实现消息传输
 
@@ -65,4 +69,7 @@
 ![](https://raw.githubusercontent.com/JelinYao/WebChatRoom/master/img/emoji.png)
 
 ![](https://raw.githubusercontent.com/JelinYao/WebChatRoom/master/img/chat1.png)
+
+url链接自动识别
+![](https://raw.githubusercontent.com/JelinYao/WebChatRoom/master/img/chat4.png)
 
