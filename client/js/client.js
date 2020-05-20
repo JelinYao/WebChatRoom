@@ -116,9 +116,11 @@ function addChatMessage(msg){
   var isMyself = (msg.user.id === me.id);
   var div1 = document.createElement('div');
   div1.setAttribute('class', 'person');
-  div1.setAttribute('data-chat', '');
+  div1.setAttribute('data-chat', msg.user.id);
+  //创建头像展示div
   var div2 = document.createElement('div');
   div2.setAttribute('style', isMyself ? 'float: right;' : 'float: left;');
+  //创建用户头像
   var img = document.createElement('img');
   img.src = msg.user.avata;
   img.setAttribute('class', 'avataImg');
@@ -127,12 +129,16 @@ function addChatMessage(msg){
   var html = '';
   switch(msg.data.type){
     case MessageType.MtText:
-      html = emojiToHtml(msg.data.value);
+      var content = msg.data.value;
+      var reg = '/(http://|https?/)((\w|=|?|.|/|&|-)+)/g';
+      html = content.replace(reg, "<a href='$1$2'>$1$2</a>")
+      html = emojiToHtml(html);
       break;
     case MessageType.MtImage:
       html = "<img src=\"" + msg.data.value + "\" style=\"width:140px;height:180px;\">";
       break;
   }
+  //创建文字展示div
   var div3 = document.createElement('div');
   div3.setAttribute('class', isMyself ? 'bubble me' : 'bubble you');
   div3.innerHTML = html;
@@ -256,6 +262,7 @@ function onClickImg(){
       input.setAttribute('id','input_file');
       input.setAttribute('type','file');
       input.setAttribute('name','file');
+      input.setAttribute('accept', 'image/*');
       input.setAttribute("style",'visibility:hidden;');
       input.addEventListener('change', ()=>{
         console.log(input.value);

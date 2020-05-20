@@ -328,8 +328,11 @@ body {
           transform: rotate(29deg) skew(-35deg);
 }
 .container .right .bubble.you {
-  margin-left: 60px;
-  /* float: left; */
+  margin-right: 6px;
+  float: right;
+  width: 86%;
+  line-height: 20px;
+  word-wrap: break-word;
   color: var(--dark);
   background-color: #eceff1;
   align-self: flex-start;
@@ -342,12 +345,10 @@ body {
 }
 .container .right .chat .person {
   margin: 6px 0px 6px 0px;
+  float: left;
+  width: 100%;
 }
-/* .container .right .chat .person img {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-} */
+
 .container .right .bubble.system {
   float: center;
   color: #333333;
@@ -358,8 +359,11 @@ body {
           animation-name: slideFromLeft;
 }
 .container .right .bubble.me {
-  margin-right: 60px;
-  /* float: right; */
+  margin-right: 6px;
+  float: right;
+  width: 86%;
+  line-height: 20px;
+  word-wrap: break-word;
   color: var(--white);
   background-color: var(--blue);
   align-self: flex-end;
