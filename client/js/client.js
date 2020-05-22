@@ -26,27 +26,28 @@ function EnterRoom(){
     socket = io(SERVER);
     //连接上服务端
     socket.on('connect', ()=>{
-        //var osInfo = getOsInfo();
         //注册账号
         socket.emit('register', me);
-        console.log("register: ", me);
+        console.log('register: ', me);
+    });
+    socket.on('disconnect', ()=>{
+      console.log('disconnect server');
     });
     //聊天
     socket.on('chat', data=>{
-        console.log("chat: ", JSON.stringify(data));
+        console.log('chat: ', JSON.stringify(data));
         //群发消息
         addMessage(data);
     });
 
     //广播消息
     socket.on('broadcast', data=>{
-      console.log("broadcast: ", data);
+      console.log('broadcast: ', data);
 
     })
     //重连
     socket.on('reconnect_attempt', ()=>{
-        //addMsgToHtml('本机[' + socket.id + ']: 尝试重新连接服务器');
-        console.log("本机掉线，尝试重连服务器");
+        console.log('attempt to reconnect');
     });
 }
 
@@ -95,7 +96,7 @@ function addMessage(msg){
       case BoardcastType.BtUserFull:
         socket.disconnect(true);
         alert('聊天室人数已满，无法加入！');
-        break
+        break;
   }
 }
 
@@ -161,14 +162,14 @@ function addChatMessage(msg){
 
 //发送文字消息
 function sendTextMessage(){
-  if(socket == null && socket.disconnected){
+  if(socket == null || socket.disconnected){
     alert("socket is disconnected!");
     return;
   }
   var input = document.getElementById('input_text');
   var text = input.value;
   if(text.length == 0){
-    alert('请先输入发送内容');
+    alert('please input message');
     return;
   }
   input.value = '';
