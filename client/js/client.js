@@ -8,7 +8,9 @@ var me = {
 }
 //上次消息时间
 var lastMsgTime = 0;
-window.onload = function (){
+var roomId = '';
+function initRoom(id){
+  roomId = id;
   this.initEmoji();
   this.me.uuid = uuid();
   this.EnterRoom();
@@ -17,13 +19,38 @@ window.onload = function (){
 var socket = null;
 //重连次数
 var retry_count = 0;
+
+window.onload = function(){
+  axios.get('/roomList').then(res=>{
+    if(res.data.code === 200){
+        var roomlist = res.data.data;
+        for(var i=0;i<roomlist.length;++i){
+          
+        }
+    }
+  });
+}
+
+function onClickRoom() {
+  var roomList = document.getElementById("roomList");
+  roomList.style.display = "none";
+  var chatRoom = document.getElementById("chatRoom");
+  chatRoom.style.display = "block";
+  var id = "javascript";
+  initRoom(id);
+}
+
 function EnterRoom(){
     if(socket != null && socket.connected){
         alert("socket is already connected!");
         return;
     }
     //这里使用的是我的内网地址，方便在虚拟机、手机上也可以测试
-    socket = io(SERVER);
+    // socket = io(SERVER_URL, {
+    //   path:'/'+roomId
+    // });
+
+    socket = io('/'+roomId);
     //连接上服务端
     socket.on('connect', ()=>{
         //注册账号

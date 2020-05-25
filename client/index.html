@@ -5,15 +5,72 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Node.js + Socket.io搭建基于HTML5实现的Web聊天室</title>
 <script src="/socket.io/socket.io.js"></script>
-<!-- <link rel="stylesheet" href="css/font.css"> -->
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <link rel="stylesheet" href="css/reset.min.css">
 <link rel="stylesheet" href="css/style.css">
-
+<link rel="stylesheet" href="css/roomlist.css">
 </head>
 <body>
-
 <div class="wrapper">
-	<div class="container">
+    <div id="roomList">
+        <div class="roomDiv">
+            <a class="roomEnter" href="javascript:void(0);" onclick="onClickRoom();">
+            <div class="tile-inner">
+                <h4 class="roomTitle">JavaScript学习交流</h4>
+                <img class="roomImg" src="img/room/js.jpg" />
+                <span style="color: white;word-wrap: break-word;">JavaScript是世界上最好的语言</span>
+            </div>
+            </a>
+        </div>
+        <div class="roomDiv">
+            <a class="roomEnter" href="/historyHome">
+            <div class="tile-inner">
+                <h4 class="roomTitle">历史学习交流</h4>
+                <img class="roomImg" src="img/room/liqingzhao.jpg" />
+                <span style="color: white;word-wrap: break-word;">爱历史，爱学习,不思量，自难相忘。物是人非事事休</span>
+            </div>
+            </a>
+        </div>
+        <div class="roomDiv">
+            <a class="roomEnter" href="/cppRome">
+            <div class="tile-inner">
+                <h4 class="roomTitle">C/C++学习交流</h4>
+                <img class="roomImg" src="img/room/cpp.jpg" />
+                <label style="color: white;word-wrap: break-word;">C/C++是世界上最好的语言</label>
+            </div>
+            </a>
+        </div>
+
+        <div class="roomDiv">
+            <a class="roomEnter" href="/javeHome">
+            <div class="tile-inner">
+                <h4 class="roomTitle">Java学习交流</h4>
+                <img class="roomImg" src="img/room/java.jpg" />
+                <label style="color: white;word-wrap: break-word;">Java是世界上最好的语言</label>
+            </div>
+            </a>
+        </div>
+        <div class="roomDiv">
+            <a class="roomEnter" href="/jsHome">
+            <div class="tile-inner">
+                <h4 class="roomTitle">python学习交流</h4>
+                <img class="roomImg" src="img/room/python.jpg" />
+                <label style="color: white;word-wrap: break-word;">python是世界上最好的语言</label>
+            </div>
+            </a>
+        </div>
+        <div class="roomDiv">
+            <a class="roomEnter" href="/jsHome">
+                <div class="tile-inner">
+                <h4 class="roomTitle">c#学习交流</h4>
+                <img class="roomImg" src="img/room/csharp.jpg" />
+                <label style="color: white;word-wrap: break-word;">c#是世界上最好的语言</label>
+            </div>
+            </a>
+        </div>
+        
+    </div>
+	<div id="chatRoom" class="container" style="display: none;">
         <div class="right">
             <div class="top"><span>群聊: <span class="name">我们都是好孩子</span></span>
             </div>

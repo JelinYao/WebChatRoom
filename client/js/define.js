@@ -1,5 +1,5 @@
 //服务器域名地址
-const SERVER = "http://localhost";
+const SERVER_URL = "http://localhost/";
 
 //定义消息类型
 const BoardcastType = {
