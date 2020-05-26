@@ -1,9 +1,9 @@
 .roomDiv{
     width: 300px;
-    height: 80px;
+    height: 100px;
     margin-top: 20px;
-    margin-left: 5px;
-    margin-right: 5px; 
+    margin-left: 10px;
+    margin-right: 10px; 
     float: left;
     border:1px solid;
     border-radius: 4px;
@@ -20,6 +20,8 @@
     width:48px; 
     border:1px solid #F0F0F0;
     float: left;
+    margin-left: 6px;
+    margin-right: 6px;
     filter:progid:DXImageTransform.Microsoft.Shadow(color=#909090,direction=120,strength=3);/*ie*/
     -moz-box-shadow: 2px 2px 10px #909090;/*firefox*/
     -webkit-box-shadow: 2px 2px 10px #909090;/*safari或chrome*/
@@ -37,5 +39,14 @@
     color: white;
     font-weight: bold;
     font-size: 20px;
+    margin-left: 6px;
     margin-bottom: 8px;
+}
+.roomDesc {
+    color: white;
+    word-wrap: break-word;
+    /* margin-left: 6px; */
+    /* letter-spacing: 6px; */
+    line-height: 22px;
+    text-overflow: ellipsis;
 }

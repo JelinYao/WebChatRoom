@@ -9,35 +9,58 @@ var me = {
 //上次消息时间
 var lastMsgTime = 0;
 var roomId = '';
-function initRoom(id){
-  roomId = id;
-  this.initEmoji();
-  this.me.uuid = uuid();
-  this.EnterRoom();
-}
-
 var socket = null;
-//重连次数
-var retry_count = 0;
 
 window.onload = function(){
   axios.get('/roomList').then(res=>{
     if(res.data.code === 200){
         var roomlist = res.data.data;
+        var rootDiv = document.getElementById('roomList');
+        //创建房间列表
         for(var i=0;i<roomlist.length;++i){
-          
+            var roomDiv = document.createElement('div');
+            roomDiv.classList.add('roomDiv');
+            var a = document.createElement('a');
+            a.classList.add('roomEnter');
+            a.href = 'javascript:void(0);';
+            a.id = roomlist[i].id;
+            a.setAttribute('onclick', 'onClickRoom(' + roomlist[i].id + ',"' + roomlist[i].name + '");');
+            var titleDiv = document.createElement('div');
+            titleDiv.classList.add('tile-inner')
+            var h4 = document.createElement('h4');
+            h4.classList.add('roomTitle');
+            h4.innerHTML = roomlist[i].name;
+            titleDiv.appendChild(h4);
+            var img = document.createElement('img');
+            img.classList.add('roomImg');
+            img.src = roomlist[i].ico;
+            titleDiv.appendChild(img);
+            var span = document.createElement('span');
+            span.classList.add('roomDesc');
+            span.innerText = roomlist[i].desc;
+            titleDiv.appendChild(span);
+            a.appendChild(titleDiv);
+            roomDiv.appendChild(a);
+            rootDiv.appendChild(roomDiv);
         }
     }
   });
 }
 
-function onClickRoom() {
+//点击进入房间
+function onClickRoom(id, name) {
   var roomList = document.getElementById("roomList");
   roomList.style.display = "none";
   var chatRoom = document.getElementById("chatRoom");
   chatRoom.style.display = "block";
-  var id = "javascript";
-  initRoom(id);
+  var span = document.getElementById("chatRoomName");
+  if(span != null){
+    span.innerHTML = name;
+  }
+  roomId = id;
+  this.initEmoji();
+  this.me.uuid = uuid();
+  this.EnterRoom();
 }
 
 function EnterRoom(){
@@ -45,11 +68,6 @@ function EnterRoom(){
         alert("socket is already connected!");
         return;
     }
-    //这里使用的是我的内网地址，方便在虚拟机、手机上也可以测试
-    // socket = io(SERVER_URL, {
-    //   path:'/'+roomId
-    // });
-
     socket = io('/'+roomId);
     //连接上服务端
     socket.on('connect', ()=>{
@@ -58,6 +76,7 @@ function EnterRoom(){
         console.log('register: ', me);
     });
     socket.on('disconnect', ()=>{
+      //移除
       console.log('disconnect server');
     });
     //聊天
@@ -101,12 +120,6 @@ function addMessage(msg){
       delUserFromList(msg.user);
       break;
     case BoardcastType.BtMessage:{
-      //先判断要不要添加时间
-      if(msg.time - lastMsgTime > 60000){
-        var date = stampToTime(msg.time);
-        addSystemMessage(date);
-      }
-      lastMsgTime = msg.time;
       addChatMessage(msg);
     }
       break;
@@ -141,6 +154,12 @@ function addSystemMessage(msg){
 
 //添加聊天消息
 function addChatMessage(msg){
+  //先判断要不要添加时间
+  if(msg.time - lastMsgTime > 60000){
+    var date = stampToTime(msg.time);
+    addSystemMessage(date);
+  }
+  lastMsgTime = msg.time;
   var isMyself = (msg.user.id === me.id);
   var div1 = document.createElement('div');
   div1.setAttribute('class', 'person');
@@ -270,7 +289,9 @@ function addUserToList(user){
   var spanTime = document.createElement('span');
   spanTime.setAttribute('class', 'time');
   var now = new Date();
-  var time = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();
+  var time = now.getHours() + ':' 
+  + ((now.getMinutes()<10?('0' + now.getMinutes()):now.getMinutes())) + ':' 
+  + ((now.getSeconds()<10?('0' + now.getSeconds()):now.getSeconds()));
   spanTime.innerText = time;
   li.appendChild(spanTime);
   var spanSay = document.createElement('span');
@@ -319,12 +340,12 @@ function onClickImg(){
           var data = e.target.result;
           var imgMD5 = md5(data);
           console.log('img md5: ' + imgMD5);
-          // var form = new FormData(), url = SERVER + '/queryImg';
+          // var form = new FormData(), url = SERVER_URL + '/queryImg';
           // form.append('md5', imgMD5);
           // requestUrl(url, form, function(){
           // });
           //查询图片是否存在
-          var form = new FormData(), url = SERVER + '/uploadChatImg', file = input.files[0];
+          var form = new FormData(), url = SERVER_URL + '/uploadChatImg', file = input.files[0];
           form.append('file', file);
           form.append('md5', imgMD5);
           var xhr = new XMLHttpRequest();

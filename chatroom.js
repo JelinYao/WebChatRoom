@@ -10,6 +10,7 @@ class chatroom{
         this.namespace = _namespace;
         this.clientList = new List();
         this.socketio = io.of('/' + this.namespace);
+        console.log("创建房间：", this.namespace);
         this.socketio.on('connection', socket=>{
             //客户端注册
             socket.on('register', data=>{
@@ -76,7 +77,7 @@ class chatroom{
 
     //随机生成用户头像
     getUserAvata(){
-        var index = (Math.round(Math.random()*1000))%defineModule.define.avata_count + 1;
+        var index = (Math.round(Math.random()*1000))%defineModule.define.avataCount + 1;
         return "img/avata/" + index + ".png";
     }
     //生成用户ID

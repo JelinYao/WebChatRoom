@@ -23,12 +23,12 @@ var currentUserId = 10000;
 
 //定义列表
 var roomList = [
-    {id:1, name:"JavaScript学习交流", desc:"JavaScript是世界上最好的语言", limit:5},
-    {id:2, name:"历史学习交流", desc:"爱历史，爱学习,不思量，自难相忘。物是人非事事休", limit:5},
-    {id:3, name:"C/C++学习交流", desc:"C/C++是世界上最好的语言", limit:5},
-    {id:4, name:"Java学习交流", desc:"Java是世界上最好的语言", limit:5},
-    {id:5, name:"python学习交流", desc:"python是世界上最好的语言", limit:5},
-    {id:6, name:"c#学习交流", desc:"c#是世界上最好的语言", limit:5},
+    {id:1, name:"JavaScript学习交流", desc:"JavaScript是世界上最好的语言", limit:5, ico:"img/room/js.jpg"},
+    {id:2, name:"历史学习交流", desc:"昨夜雨疏风骤，浓睡不消残酒，试问卷帘人，却道海棠依旧。知否、知否，应是绿肥红瘦。", limit:5, ico:"img/room/liqingzhao.jpg"},
+    {id:3, name:"C/C++学习交流", desc:"C/C++是世界上最好的语言", limit:5, ico:"img/room/cpp.jpg"},
+    {id:4, name:"Java学习交流", desc:"Java是世界上最好的语言", limit:5, ico:"img/room/java.jpg"},
+    {id:5, name:"python学习交流", desc:"python是世界上最好的语言", limit:5, ico:"img/room/python.jpg"},
+    {id:6, name:"c#学习交流", desc:"c#是世界上最好的语言", limit:5, ico:"img/room/csharp.jpg"},
 ]
 
 module.exports = {

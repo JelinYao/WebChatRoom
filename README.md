@@ -33,6 +33,12 @@
 
 （2）修复聊天框文字显示错乱的bug
 
+6、2020年5月26日22:24:33
+
+（1）修复若干小的显示bug
+
+（2）新增6个房间，支持房间内聊天
+
 ## 架构
 （1）服务端：Node.js + socket.io实现消息传输
 
@@ -73,5 +79,15 @@
 ![](https://raw.githubusercontent.com/JelinYao/WebChatRoom/master/img/chat1.png)
 
 url链接自动识别
+
 ![](https://raw.githubusercontent.com/JelinYao/WebChatRoom/master/img/chat4.png)
+
+
+4、聊天房间
+
+![](https://raw.githubusercontent.com/JelinYao/WebChatRoom/master/img/room.png)
+
+![](https://raw.githubusercontent.com/JelinYao/WebChatRoom/master/img/chat5.png)
+
+
 

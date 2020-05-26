@@ -111,7 +111,7 @@ app.post('/queryImg', (request, response)=>{
     response.end();
 })
 
-//启动websocket.io服务器
+//启动websocket.io服务器，创建房间
 var chatroomModule = require('./chatroom');
 var chatroom = chatroomModule.chatroom;
 for(var i=0;i<roomList.length;++i){
