@@ -1,5 +1,6 @@
 # WebChatRoom
 使用Node.js + socket.io搭建基于HTML5的在线聊天室，支持文字、表情、图片消息群发。
+在线聊天室：<https://chat.jelinyao.cn/>
 
 ## 更新记录
 ```
