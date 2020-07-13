@@ -9,20 +9,34 @@ var fs = require('fs');
 var express = require('express');
 var app = express();
 var multiparty = require('multiparty');
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
+var https = require('https');
 let path = require('path');
 var defineModule = require('./define');
 var roomList = defineModule.data.roomList;
 
+var logModule = require('./log');
+const logger = logModule.getLogger();
+const errorLogger = logModule.getLogger('err');
+
+
+//https://localhost/index.html
+//配置HTTPS证书（此证书为免费证书：https://freessl.cn/）
+var options = {
+    key:fs.readFileSync('.\\key\\www.jelinyao.cn_key.key'),
+    cert:fs.readFileSync('.\\key\\www.jelinyao.cn_chain.crt')
+};
+var server = https.Server(options, app);
+var io = require('socket.io')(server);
+//监听HTTPS端口443
+//https.createServer(options, app).listen(443);
+server.listen(443);
 //设置本地静态资源路径
 app.use(express.static(path.join(__dirname, './client')));
-//监听本地端口
-server.listen(80);
 
 //返回主页地址
 app.get('/', (request, response)=>{
-    res.sendFile(__dirname + '/client/index.html');
+    //response.writeHead(200, {'Content-Type': 'text/html;charset:utf-8'});
+    response.sendFile(__dirname + '/client/chat.html');
 })
 
 //获取房间列表
@@ -111,9 +125,22 @@ app.post('/queryImg', (request, response)=>{
     response.end();
 })
 
-//启动websocket.io服务器，创建房间
+logger.info('启动websocket.io服务器，创建房间');
 var chatroomModule = require('./chatroom');
 var chatroom = chatroomModule.chatroom;
 for(var i=0;i<roomList.length;++i){
-    var room = new chatroom(io, roomList[i].id, roomList[i].limit);
+    var room = new chatroom(io, roomList[i].id, roomList[i].limit, roomList[i].name);
 }
+
+
+//监听HTTP端口，重定向到HTTPS
+var http = require('http');
+var http_app = express();
+var http_server = http.Server(http_app);
+http_server.listen(80);
+
+http_app.get("*", (req, res, next) => {
+    let host = req.headers.host;
+    host = host.replace(/\:\d+$/, '');
+    res.redirect(`https://${host}${req.path}`);
+})

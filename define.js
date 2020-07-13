@@ -31,8 +31,15 @@ var roomList = [
     {id:6, name:"c#学习交流", desc:"c#是世界上最好的语言", limit:5, ico:"img/room/csharp.jpg"},
 ]
 
+//定义自动回复消息
+var autoChatMessage = {
+    what: [
+        '你在说啥呀？', '听不懂，你在说啥？', '我太南了，你在说啥呀', '我真的听不懂你说的话，555555', '听不懂，我就静静地看着你说', '休息一下吧亲'
+    ],
+}
+
 module.exports = {
-    enum : {BoardcastType, MessageType},
+    enum : {BoardcastType, MessageType, },
     define : {avataCount, currentUserId},
-    data : {roomList, },
+    data : {roomList, autoChatMessage},
 }

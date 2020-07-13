@@ -1,0 +1,28 @@
+{
+  "name": "webchatroom",
+  "version": "1.0.0",
+  "description": "web chat ",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JelinYao/WebChatRoom.git"
+  },
+  "keywords": [
+    "Let's",
+    "chat"
+  ],
+  "author": "JelinYao",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JelinYao/WebChatRoom/issues"
+  },
+  "homepage": "https://github.com/JelinYao/WebChatRoom#readme",
+  "dependencies": {
+    "express": "~4.17.0",
+    "multiparty": "~4.2.1"
+  }
+}
