@@ -12,18 +12,24 @@ var multiparty = require('multiparty');
 var https = require('https');
 let path = require('path');
 var defineModule = require('./define');
+var os = require('os');
 var roomList = defineModule.data.roomList;
 
 var logModule = require('./log');
 const logger = logModule.getLogger();
 const errorLogger = logModule.getLogger('err');
 
-
+//判断操作系统
+let sysType = os.type();
+let sep = '/';
+if (sysType==="Windows_NT") {
+    sep = '\\';
+}
 //https://localhost/index.html
 //配置HTTPS证书（此证书为免费证书：https://freessl.cn/）
 var options = {
-    key:fs.readFileSync('.\\key\\www.jelinyao.cn_key.key'),
-    cert:fs.readFileSync('.\\key\\www.jelinyao.cn_chain.crt')
+    key:fs.readFileSync('.' + sep + 'key' + sep + 'www.jelinyao.cn_key.key'),
+    cert:fs.readFileSync('.' + sep + 'key' + sep + 'www.jelinyao.cn_chain.crt')
 };
 var server = https.Server(options, app);
 var io = require('socket.io')(server);
@@ -56,7 +62,7 @@ app.post('/uploadChatImg', (request, response)=>{
         var form = new multiparty.Form();
         form.encoding = 'utf-8';
         //设置文件存储路劲
-        form.uploadDir = '.\\client\\img\\chat\\';
+        form.uploadDir = '.' + sep + 'client' + sep + 'img' + sep + 'chat' + sep;
         fs.stat(form.uploadDir, function(error, stats){
             if(error){
                 fs.mkdirSync(form.uploadDir);
@@ -79,7 +85,7 @@ app.post('/uploadChatImg', (request, response)=>{
                 imgExt = inputFile.originalFilename.substring(pos);
             }
             var uploadPath = inputFile.path;
-            var destPath = ".\\client\\img\\chat\\" + fields.md5 + imgExt;
+            var destPath = '.' + sep + 'client' + sep + 'img' + sep + 'chat' + sep + fields.md5 + imgExt;
             //重命名为真实文件名
             fs.rename(uploadPath, destPath, function(error){
                 var result = {};
@@ -105,25 +111,25 @@ app.post('/uploadChatImg', (request, response)=>{
 
 })
 
-app.post('/queryImg', (request, response)=>{
-    var md5 = request.md5;
-    var file = '.\\img\\chat\\' + md5;
-    var reader = new FileReader();
-    var result = {};
-    reader.onerror = function(e){
-        //文件不存在
-        result.code = 404;
-        reader.msg = e;
-    }
-    reader.onload = function(e){
-        //文件存在
-        result.code = 200;
-        reader.msg = 'Image exists';
-    }
-    response.writeHead(200, {'content-type': 'text/plain;charset=utf-8'});
-    response.write(JSON.stringify(result));
-    response.end();
-})
+// app.post('/queryImg', (request, response)=>{
+//     var md5 = request.md5;
+//     var file = '.\\img\\chat\\' + md5;
+//     var reader = new FileReader();
+//     var result = {};
+//     reader.onerror = function(e){
+//         //文件不存在
+//         result.code = 404;
+//         reader.msg = e;
+//     }
+//     reader.onload = function(e){
+//         //文件存在
+//         result.code = 200;
+//         reader.msg = 'Image exists';
+//     }
+//     response.writeHead(200, {'content-type': 'text/plain;charset=utf-8'});
+//     response.write(JSON.stringify(result));
+//     response.end();
+// })
 
 logger.info('启动websocket.io服务器，创建房间');
 var chatroomModule = require('./chatroom');

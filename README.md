@@ -40,12 +40,16 @@
     socket.io中文学习文档：https://zhuanlan.zhihu.com/p/29148869  
 （2）B端：HTML5 + Javascript实现简单界面功能
 
-## 使用方法
+## 运行
 1、安装Node.js客户端，使用npm安装express、socket.io等基础组件  
 2、调试运行代码  
+### Windows上  
 （1）推荐使用VS Code打开webchatroom目录，调试server.js。  
 （2）浏览器中输入localhost，打开前端聊天窗口页面（可以打开多个）。  
-（3）发消息，测试多人聊天功能。
+（3）发消息，测试多人聊天功能。  
+### CenterOS  
+（1）root login
+（2）setsid node server.js
 
 
 ## 截图
@@ -72,5 +76,6 @@ url链接自动识别
 
 ![](https://raw.githubusercontent.com/JelinYao/WebChatRoom/master/img/chat5.png)
 
-
+5、部署  
+![](https://raw.githubusercontent.com/JelinYao/WebChatRoom/master/img/deploy.png)
 
